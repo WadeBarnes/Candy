@@ -15,7 +15,8 @@
 resource "aws_instance" "indy_node" {
   ami                  = var.ami_id
   instance_type        = var.ec2_instance_type
-  iam_instance_profile = var.iam_profile
+  #iam_instance_profile = var.iam_profile
+  key_name      = "candy_key_rsa"
 
   # ===============================================================
   # Provinces Hosting in AWS will want to ensure their

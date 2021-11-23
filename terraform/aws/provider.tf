@@ -19,10 +19,10 @@ terraform {
 provider "aws" {
   region = var.candy_region
 
-  assume_role {
-    role_arn     = var.assume_role
-    session_name = "terraform-cloud"
-  }
+  #assume_role {
+  #  role_arn     = var.assume_role
+  #  session_name = "terraform-cloud"
+  #}
 
   default_tags {
     tags = {

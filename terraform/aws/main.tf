@@ -11,7 +11,7 @@ module "indy-node" {
 
   ami_id            = data.aws_ami.ubuntu.id
   ec2_instance_type = var.candy_ec2_instance_type
-  iam_profile       = data.aws_iam_role.ssm_role.id
+  #iam_profile       = data.aws_iam_role.ssm_role.id
 
   default_vpc_id = data.aws_vpc.default.id
 

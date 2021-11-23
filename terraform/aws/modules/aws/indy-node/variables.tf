@@ -22,9 +22,9 @@ variable "ec2_instance_type" {
   description = "Type of instance ec2"
 }
 
-variable "iam_profile" {
-  description = "The IAM profile to attach to the ec2 instance."
-}
+#variable "iam_profile" {
+#  description = "The IAM profile to attach to the ec2 instance."
+#}
 
 variable "ebs_volume_size" {
   description = "EBS volume size"

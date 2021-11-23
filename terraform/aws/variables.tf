@@ -21,9 +21,9 @@ variable "candy_application_name" {
   description = "Name of application"
 }
 
-variable "assume_role" {
-  description = "The AWS IAM role to assume to access a given environment."
-}
+#variable "assume_role" {
+#  description = "The AWS IAM role to assume to access a given environment."
+#}
 
 variable "candy_environment" {
   description = "Environnement"
