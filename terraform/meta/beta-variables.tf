@@ -38,7 +38,7 @@ resource "tfe_variable" "beta_environment" {
 
 resource "tfe_variable" "beta_instance_name" {
   key          = "candy_instance_name"
-  value        = "beta-bc"
+  value        = "beta-qc"
   category     = "terraform"
   workspace_id = data.tfe_workspace.beta.id
 }

@@ -38,7 +38,7 @@ resource "tfe_variable" "dev_environment" {
 
 resource "tfe_variable" "dev_instance_name" {
   key          = "candy_instance_name"
-  value        = "dev-bc"
+  value        = "dev-qc"
   category     = "terraform"
   workspace_id = data.tfe_workspace.dev.id
 }
