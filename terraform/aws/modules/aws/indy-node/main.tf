@@ -93,7 +93,7 @@ resource "aws_internet_gateway" "indy_gw" {
 }
 
 resource "aws_vpc" "indy_vpc" {
-  cidr_block       = "172.30.0.0/16"
+  cidr_block       = var.vpc_cidr_block
   instance_tenancy = "default"
 
   tags = {

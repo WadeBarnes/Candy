@@ -23,6 +23,8 @@ module "indy-node" {
 
   use_elastic_ips = var.candy_use_elastic_ips
 
+  vpc_cidr_block  = var.candy_vpc_cidr_block
+
   subnet_node_cidr_block   = "${var.candy_subnet_cidr_block_prefix}${var.candy_subnet_cidr_starting_address + count.index + (count.index % (var.candy_subnet_cidr_starting_address + count.index))}.0/24"
   subnet_client_cidr_block = "${var.candy_subnet_cidr_block_prefix}${var.candy_subnet_cidr_starting_address + count.index + 1 + (count.index % (var.candy_subnet_cidr_starting_address + count.index + 1))}.0/24"
   

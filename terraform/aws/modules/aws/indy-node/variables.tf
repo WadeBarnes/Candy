@@ -46,6 +46,10 @@ variable "ebs_delete_on_termination" {
   description = "EBS delete on termination"
 }
 
+variable "vpc_cidr_block" {
+  description = "The VPC CIDR block."
+}
+
 variable "subnet_node_cidr_block" {
   description = "The cidr block to use for the node subnet."
 }

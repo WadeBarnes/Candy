@@ -73,6 +73,10 @@ variable "candy_ebs_delete_on_termination" {
   description = "EBS delete on termination"
 }
 
+variable "candy_vpc_cidr_block" {
+  description = "The VPC CIDR block."
+}
+
 variable "candy_subnet_cidr_block_prefix" {
   description = "The prefix for the subnet CIDR blocks."
 }

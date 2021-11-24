@@ -133,6 +133,17 @@ resource "tfe_variable" "alpha_ebs_delete_on_termination" {
 # ===================================================
 
 # ===================================================
+# VPC
+# ---------------------------------------------------
+resource "tfe_variable" "alpha_vpc_cidr_block" {
+  key          = "candy_vpc_cidr_block"
+  value        = "172.30.0.0/16"
+  category     = "terraform"
+  workspace_id = data.tfe_workspace.alpha.id
+}
+# ===================================================
+
+# ===================================================
 # Subnet
 # ---------------------------------------------------
 resource "tfe_variable" "alpha_subnet_cidr_block_prefix" {
