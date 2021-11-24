@@ -12,10 +12,20 @@
 # are created for node and client communication and each interface is assigned an elastic IP.
 # ====================================================================================================
 
+
+resource "aws_placement_group" "indy_placement_group" {
+  name     = "${var.instance_name} - Placement group"
+  strategy = "spread"
+  tags = {
+    Name     = "${var.instance_name} - Placement group"
+    Instance = var.instance_name
+  }
+}
+
 resource "aws_instance" "indy_node" {
   ami                  = var.ami_id
   instance_type        = var.ec2_instance_type
-  #iam_instance_profile = var.iam_profile
+  #iam_instance_profile = var.iam_profile  
   key_name      = "candy_key_rsa"
 
   # ===============================================================
@@ -24,7 +34,9 @@ resource "aws_instance" "indy_node" {
   # ---------------------------------------------------------------
   # availability_zone           = "ca-central-1d"
   # ===============================================================
-
+  
+  placement_group = aws_placement_group.indy_placement_group.name
+  
   root_block_device {
     volume_size = var.ebs_volume_size
     volume_type = var.ebs_volume_type
@@ -71,12 +83,45 @@ resource "aws_network_interface_attachment" "client_interface_attachment" {
   device_index         = 1
 }
 
+resource "aws_internet_gateway" "indy_gw" {
+  vpc_id = aws_vpc.indy_vpc.id
+
+  tags = {
+    Name     = "${var.instance_name} - Internet gateway"
+    Instance = var.instance_name
+  }
+}
+
+resource "aws_vpc" "indy_vpc" {
+  cidr_block       = "172.30.0.0/16"
+  instance_tenancy = "default"
+
+  tags = {
+    Name     = "${var.instance_name} - VPC"
+    Instance = var.instance_name
+  }
+}
+
+resource "aws_default_route_table" "indy_route_table" {
+  default_route_table_id = aws_vpc.indy_vpc.default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.indy_gw.id
+  }
+
+  tags = {
+    Name     = "${var.instance_name} - Route table"
+    Instance = var.instance_name
+  }
+}
+
 resource "aws_subnet" "node_subnet" {
   assign_ipv6_address_on_creation = false
   cidr_block                      = var.subnet_node_cidr_block
   map_public_ip_on_launch         = var.use_elastic_ips ? false : true
   # availability_zone               = aws_instance.indy_node.availability_zone
-  vpc_id                          = var.default_vpc_id
+  vpc_id                          = aws_vpc.indy_vpc.id
 
   tags = {
     Name     = "${var.instance_name} - Node Subnet"
@@ -91,7 +136,7 @@ resource "aws_subnet" "client_subnet" {
   cidr_block                      = var.subnet_client_cidr_block
   map_public_ip_on_launch         = var.use_elastic_ips ? false : true
   availability_zone               = aws_instance.indy_node.availability_zone
-  vpc_id                          = var.default_vpc_id
+  vpc_id                          = aws_vpc.indy_vpc.id
 
   tags = {
     Name     = "${var.instance_name} - Client Subnet"
@@ -103,7 +148,7 @@ resource "aws_network_interface" "node_nic" {
   description        = "The network interface used for inter-node communications."
   ipv6_address_count = 0
   private_ips_count  = 0
-  security_groups    = var.security_groups
+  security_groups    = [aws_security_group.validator_node_security_group.id]
   source_dest_check  = true
   subnet_id          = aws_subnet.node_subnet.id
 
@@ -119,7 +164,7 @@ resource "aws_network_interface" "client_nic" {
   description        = "The network interface used for client communications."
   ipv6_address_count = 0
   private_ips_count  = 0
-  security_groups    = var.security_groups
+  security_groups    = [aws_security_group.validator_node_security_group.id, aws_security_group.validator_client_ssh_security_group.id]
   source_dest_check  = true
   subnet_id          = aws_subnet.client_subnet[count.index].id
 

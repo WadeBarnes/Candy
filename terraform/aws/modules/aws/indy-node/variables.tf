@@ -14,9 +14,9 @@ variable "ami_id" {
   description = "AMI to use for the instance."
 }
 
-variable "default_vpc_id" {
-  description = "The ID of the default VPC."
-}
+#variable "default_vpc_id" {
+ # description = "The ID of the default VPC."
+#}
 
 variable "ec2_instance_type" {
   description = "Type of instance ec2"
@@ -59,6 +59,6 @@ variable "use_elastic_ips" {
   type = bool
 }
 
-variable "security_groups" {
-  description = "The list of security groups for the network interfaces."
+variable "sg_description" {
+  description = "The description for the security group."
 }

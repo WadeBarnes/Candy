@@ -137,7 +137,7 @@ resource "tfe_variable" "beta_ebs_delete_on_termination" {
 # ---------------------------------------------------
 resource "tfe_variable" "beta_subnet_cidr_block_prefix" {
   key          = "candy_subnet_cidr_block_prefix"
-  value        = "172.31."
+  value        = "172.30."
   category     = "terraform"
   workspace_id = data.tfe_workspace.beta.id
 }
