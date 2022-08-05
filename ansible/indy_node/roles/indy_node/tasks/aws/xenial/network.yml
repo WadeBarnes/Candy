@@ -12,12 +12,12 @@
     - configure
     - network
 
-- name: Fail when two network interfaces are not found
-  fail: msg="Two NICs are required, but found {{ network_interfaces.stdout_lines|sort|count }}"
-  when: network_interfaces.stdout_lines|count != 2
-  tags:
-    - configure
-    - network
+# - name: Fail when two network interfaces are not found
+#   fail: msg="Two NICs are required, but found {{ network_interfaces.stdout_lines|sort|count }}"
+#   when: network_interfaces.stdout_lines|count != 2
+#   tags:
+#     - configure
+#     - network
 
 - name: Disable network management
   shell: >
@@ -96,56 +96,60 @@
 # =================================================================================
 # Get Client NIC (NIC-2) details
 # ---------------------------------------------------------------------------------
-- name: Set eth1 variable
-  set_fact:
-     eth1: "{{ (network_interfaces.stdout_lines|sort)[-1] }}"
-  tags:
-    - configure
-    - network
+- name: Get details about the second NIC
+  block:
+  - name: Set eth1 variable
+    set_fact:
+      eth1: "{{ (network_interfaces.stdout_lines|sort)[-1] }}"
+    tags:
+      - configure
+      - network
 
-- name: Find eth1 mac
-  shell: cat /sys/class/net/{{ eth1 }}/address
-  register: eth1_mac_cmd
-  tags:
-     - configure
-     - network
+  - name: Find eth1 mac
+    shell: cat /sys/class/net/{{ eth1 }}/address
+    register: eth1_mac_cmd
+    tags:
+      - configure
+      - network
 
-- name: Set eth1_mac variable
-  set_fact:
-     eth1_mac: "{{ eth1_mac_cmd.stdout_lines[0] }}"
-  tags:
-    - configure
-    - network
+  - name: Set eth1_mac variable
+    set_fact:
+      eth1_mac: "{{ eth1_mac_cmd.stdout_lines[0] }}"
+    tags:
+      - configure
+      - network
 
-- name: Find eth1 ip address
-  shell: curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/{{ eth1_mac }}/local-ipv4s
-  register: eth1_ip_cmd
-  tags:
-     - configure
-     - network
+  - name: Find eth1 ip address
+    shell: curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/{{ eth1_mac }}/local-ipv4s
+    register: eth1_ip_cmd
+    tags:
+      - configure
+      - network
 
-- name: Set eth1_ip variable
-  set_fact:
-     eth1_ip: "{{ eth1_ip_cmd.stdout_lines[0] }}"
-  tags:
-    - configure
-    - network
+  - name: Set eth1_ip variable
+    set_fact:
+      eth1_ip: "{{ eth1_ip_cmd.stdout_lines[0] }}"
+    tags:
+      - configure
+      - network
 
-- name: Find eth1 gateway address
-  shell: >
-          echo "{{ eth1_ip }}" |
-          awk -F"." '{print $1"."$2"."$3".1"}'
-  register: eth1_gw_cmd
-  tags:
-     - configure
-     - network
+  - name: Find eth1 gateway address
+    shell: >
+            echo "{{ eth1_ip }}" |
+            awk -F"." '{print $1"."$2"."$3".1"}'
+    register: eth1_gw_cmd
+    tags:
+      - configure
+      - network
 
-- name: Set eth1_gw variable
-  set_fact:
-     eth1_gw: "{{ eth1_gw_cmd.stdout_lines[0] }}"
-  tags:
-    - configure
-    - network
+  - name: Set eth1_gw variable
+    set_fact:
+      eth1_gw: "{{ eth1_gw_cmd.stdout_lines[0] }}"
+    when: network_interfaces.stdout_lines|count == 2
+    tags:
+      - configure
+      - network
+  when: network_interfaces.stdout_lines|count == 2
 # =================================================================================
 
 # =================================================================================
@@ -154,6 +158,15 @@
 - name: Set client_ip variable
   set_fact:
      client_ip: "{{ eth1_ip }}"
+  when: network_interfaces.stdout_lines|count == 2
+  tags:
+    - configure
+    - network
+
+- name: Set client_ip variable
+  set_fact:
+     client_ip: "{{ eth0_ip }}"
+  when: network_interfaces.stdout_lines|count != 2
   tags:
     - configure
     - network
@@ -169,6 +182,15 @@
 - name: Print NICs details
   debug:
     msg:  "Client IP: {{ client_ip }}; Node IP {{ node_ip }}; NIC1: {{ eth0 }} IP: {{ eth0_ip }} GW: {{ eth0_gw }}; NIC2: {{ eth1 }} IP: {{ eth1_ip }} GW: {{ eth1_gw }}"
+  when: network_interfaces.stdout_lines|count == 2
+  tags:
+    - configure
+    - network
+
+- name: Print NICs details
+  debug:
+    msg:  "Client IP: {{ client_ip }}; Node IP {{ node_ip }}; NIC1: {{ eth0 }} IP: {{ eth0_ip }} GW: {{ eth0_gw }}"
+  when: network_interfaces.stdout_lines|count != 2
   tags:
     - configure
     - network
@@ -191,6 +213,7 @@
     owner: root
     group: root
   become: true
+  when: network_interfaces.stdout_lines|count == 2
   tags:
     - configure
     - network
