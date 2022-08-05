@@ -62,3 +62,8 @@ variable "use_elastic_ips" {
 variable "security_groups" {
   description = "The list of security groups for the network interfaces."
 }
+
+variable "ssh_key_name" {
+  description = "Name of the EC2 ssh public key to use to ssh in"
+
+}

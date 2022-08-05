@@ -17,6 +17,7 @@ resource "aws_instance" "indy_node" {
   instance_type        = var.ec2_instance_type
   iam_instance_profile = var.iam_profile
 
+  key_name  = var.ssh_key_name
   # ===============================================================
   # Provinces Hosting in AWS will want to ensure their
   # nodes are in different availability zones
