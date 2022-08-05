@@ -17,7 +17,11 @@ resource "aws_instance" "indy_node" {
   instance_type        = var.ec2_instance_type
   iam_instance_profile = var.iam_profile
 
+  # Set the hostname
+  # This will be used by the Ansible scripts as the alias for the node.
+  user_data = "#!/usr/bin/env bash\nsudo hostnamectl set-hostname --static ${var.instance_name}"
   key_name  = var.ssh_key_name
+
   # ===============================================================
   # Provinces Hosting in AWS will want to ensure their
   # nodes are in different availability zones
@@ -76,7 +80,7 @@ resource "aws_subnet" "node_subnet" {
   cidr_block                      = var.subnet_node_cidr_block
   map_public_ip_on_launch         = var.use_elastic_ips ? false : true
   # availability_zone               = aws_instance.indy_node.availability_zone
-  vpc_id                          = var.default_vpc_id
+  vpc_id = var.default_vpc_id
 
   tags = {
     Name     = "${var.instance_name} - Node Subnet"
