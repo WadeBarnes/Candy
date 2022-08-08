@@ -152,6 +152,41 @@
     - indy_node_channel == "rc"
     - distribution_codename == "focal"
 
+- name: Install dependencies
+  block:
+
+  - name: indy-plenum
+    apt:
+      name:
+        - "indy-plenum=1.12.4"
+      update_cache: true
+    become: true
+
+  - name: indy-node
+    apt:
+      name:
+        - "indy-node=1.12.4"
+      update_cache: true
+    become: true
+
+  - name: sovtoken
+    apt:
+      name:
+        - "sovtoken=1.0.9"
+      update_cache: true
+    become: true
+
+  - name: sovtokenfees
+    apt:
+      name:
+        - "sovtokenfees=1.0.9"
+      update_cache: true
+    become: true
+
+  when:
+    - indy_node_pkg == "sovrin"
+    - indy_node_pkg_version == "1.1.89"
+
 - name: Install indy-node package
   apt:
     name:
