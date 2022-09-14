@@ -18,7 +18,7 @@ module "indy-node" {
   ebs_kms_key_id            = var.candy_ebs_kms_key_id
   ebs_delete_on_termination = var.candy_ebs_delete_on_termination
 
-  iam_profile       = data.aws_iam_role.ssm_role.id
+  # iam_profile       = data.aws_iam_role.ssm_role.id
 
   ssh_source_address = var.candy_ssh_source_address
 
