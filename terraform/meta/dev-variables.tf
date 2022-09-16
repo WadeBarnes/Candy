@@ -97,7 +97,7 @@ resource "tfe_variable" "dev_ec2_instance_type" {
 # ---------------------------------------------------
 resource "tfe_variable" "dev_root_volume_size" {
   key          = "candy_root_volume_size"
-  value        = "20"
+  value        = "10"
   category     = "terraform"
   workspace_id = data.tfe_workspace.dev.id
 }
