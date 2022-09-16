@@ -82,7 +82,7 @@ resource "tfe_variable" "beta_ami_filter_virtualization_type" {
 
 # ===================================================
 # EC2
-#   - t3.large (for dev and test): 2CPU, 8GiB Memory
+#   - t3.large: 2CPU, 8GiB Memory
 # ---------------------------------------------------
 resource "tfe_variable" "beta_ec2_instance_type" {
   key          = "candy_ec2_instance_type"
