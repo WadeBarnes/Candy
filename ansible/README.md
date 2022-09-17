@@ -64,15 +64,15 @@ The following steps assume:
 1. Run the playbook.  Ensure you include the correct ssh username for your environment(s) with the `--user` parameter; `validatornode` for azure environments and `ubuntu` for aws environments.
     - For example:
       ```
-      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc2 indy_plenum_pkg_version=1.13.1~rc2" indy_node/deploy.yml
+      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc3 indy_plenum_pkg_version=1.13.1~rc2" indy_node/deploy.yml
       ```
     - To have better control over the groups of tasks that get run:
       ```
-      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc2 indy_plenum_pkg_version=1.13.1~rc2 network_configuration=true install_packages=true mount_data_volume=true indy_node_configuration=false" indy_node/deploy.yml
+      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc3 indy_plenum_pkg_version=1.13.1~rc2 network_configuration=true install_packages=true mount_data_volume=true indy_node_configuration=false" indy_node/deploy.yml
       ```
     - When establishing the initial ssh connection to the servers you can disable all task groups:
       ```
-      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc2 indy_plenum_pkg_version=1.13.1~rc2 network_configuration=false install_packages=false mount_data_volume=false indy_node_configuration=false" indy_node/deploy.yml
+      ansible-playbook --user ubuntu -i aws-inventory.yml --extra-vars "cloud=aws network_name=candy-test indy_node_channel=rc indy_node_pkg=indy-node indy_node_pkg_version=1.13.2~rc3 indy_plenum_pkg_version=1.13.1~rc2 network_configuration=false install_packages=false mount_data_volume=false indy_node_configuration=false" indy_node/deploy.yml
       ```
 1. Generate Genesis files using tools in [von-network](https://github.com/bcgov/von-network)
 , for example:
