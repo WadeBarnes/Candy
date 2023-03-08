@@ -3,7 +3,7 @@
 # ---------------------------------------------------
 resource "tfe_variable" "beta_instance_count" {
   key          = "candy_instance_count"
-  value        = 1
+  value        = 4
   category     = "terraform"
   workspace_id = data.tfe_workspace.beta.id
 }
