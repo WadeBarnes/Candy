@@ -86,3 +86,10 @@ variable "candy_sg_description" {
   description = "The description for the security group."
 }
 
+variable "candy_public_ssh_key" {
+  description = "The public ssh key to register with the servers for use with Ansible."
+}
+
+variable "candy_ssh_source_address" {
+  description = "The source IP address for Ansible SSH connections, in CIDR notation."
+}

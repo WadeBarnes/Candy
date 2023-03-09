@@ -1,0 +1,60 @@
+---
+# ============================================================
+# Auto detect the OS distribution_codename for repository setup
+# ------------------------------------------------------------
+- name: Get distribution_codename info
+  shell: lsb_release -c | awk '{print $2}'
+  register: distribution_codename
+
+- name: Set distribution_codename variable
+  set_fact:
+     distribution_codename: "{{ (distribution_codename.stdout_lines)[0] }}"
+
+- name: Print distribution_codename info
+  debug:
+    msg:  "Distribution Codename: {{ distribution_codename }}"
+# ============================================================
+
+- name: Check that required variables are specified
+  assert:
+    that:
+      - lookup('vars', item, default='')
+    msg: "{{ lookup('vars', item, default='undefined')|string }}"
+  loop:
+     - indy_node_channel
+     - indy_node_pkg_version
+     - distribution_codename
+  tags:
+    - always
+
+- name: Configure Network
+  include_tasks: "{{ cloud }}/{{ distribution_codename }}/network.yml"
+  # Indy Node configuration depends on detected network configuration settings,
+  # so run the network configuration tasks when the node configuration tasks
+  # will be run.
+  when: network_configuration | bool or indy_node_configuration | bool or start_indy_node | bool
+  tags:
+    - configure
+    - network
+
+- name: Install Indy Node
+  include_tasks: install.yml
+  # The indy user and group gets created during the install and is required for mounting the data volume.
+  when: install_packages | bool or mount_data_volume | bool
+  tags:
+    - install
+    - package
+    - repo
+
+- name: Mount data volume
+  include_tasks: "{{ cloud }}/mount-data-volume.yml"
+  when: mount_data_volume | bool
+  tags:
+    - configure
+    - storage
+
+- name: Configure Indy Node
+  include_tasks: configure.yml
+  when: indy_node_configuration | bool or start_indy_node | bool
+  tags:
+    - configure

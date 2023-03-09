@@ -23,3 +23,13 @@ resource "aws_security_group" "validator_node_security_group" {
     Instance = var.candy_instance_name
   }
 }
+
+resource "aws_security_group_rule" "node_security_group_rule_ssh" {
+  type              = "ingress"
+  description       = "Allow ssh - intended of use with Ansible."
+  cidr_blocks       = [var.candy_ssh_source_address]
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  security_group_id = aws_security_group.validator_node_security_group.id
+}
