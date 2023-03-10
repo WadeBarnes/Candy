@@ -39,6 +39,16 @@
 - name: Configure indy_config.py
   shell: sudo sed -i -re "s/(^NETWORK_NAME =).*$/\1 '{{ network_name }}'/" /etc/indy/indy_config.py
 
+- name: Set Compatibility Mode
+  blockinfile:
+    path: /etc/indy/indy_config.py
+    marker: "# Compatibility Mode - {mark}"
+    block: |
+      # - Ensures compatibility with revocation transaction processing on a legacy network.
+      REV_STRATEGY_USE_COMPAT_ORDERING = True
+  when:
+  - distribution_codename == "focal" and set_compatibility_mode | bool
+
 # Note: The '/var/log/indy/{{ network_name }}' folder gets created automatically when indy is started
 - name: Ensure network folder exists
   file:

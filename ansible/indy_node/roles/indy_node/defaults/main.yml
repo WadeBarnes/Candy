@@ -18,6 +18,7 @@ network_configuration: true
 install_packages: true
 indy_node_configuration: true
 start_indy_node: true
+set_compatibility_mode: false
 
 # Don't set this, it is auto-detected
 distribution_codename: null
