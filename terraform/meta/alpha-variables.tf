@@ -42,6 +42,13 @@ resource "tfe_variable" "alpha_instance_name" {
   category     = "terraform"
   workspace_id = data.tfe_workspace.alpha.id
 }
+
+resource "tfe_variable" "alpha_iam_role" {
+  key          = "iam_role"
+  value        = "AmazonSSMRoleForInstancesQuickSetup"
+  category     = "terraform"
+  workspace_id = data.tfe_workspace.alpha.id
+}
 # ===================================================
 
 # ===================================================
@@ -139,8 +146,15 @@ resource "tfe_variable" "alpha_ebs_delete_on_termination" {
 # ===================================================
 
 # ===================================================
-# Subnet
+# Network
 # ---------------------------------------------------
+resource "tfe_variable" "alpha_vpc_node_cidr_block" {
+  key          = "candy_vpc_node_cidr_block"
+  value        = "172.31.0.0/16"
+  category     = "terraform"
+  workspace_id = data.tfe_workspace.alpha.id
+}
+
 resource "tfe_variable" "alpha_subnet_cidr_block_prefix" {
   key          = "candy_subnet_cidr_block_prefix"
   value        = "172.31."
